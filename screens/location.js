@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, Alert, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
+import Geocoder from 'react-native-geocoding';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
 export default class LocationScreen extends Component {
 
   state = {
-    latitude: null,
-    longitude: null,
+    latitude: 37.78825,
+    longitude: -122.4324,
     latitudeDelta: 0.04,
     longitudeDelta: 0.05,
     promisePosition: null
@@ -51,25 +52,54 @@ export default class LocationScreen extends Component {
     this.setState({ promisePosition })
   };
 
+  sendWhatsAppMessage = (message) => {
+    Linking.openURL(`whatsapp://send?text=${message}`)
+  }
+
+  getAddress = () => {
+    Geocoder.init('AIzaSyBzN5uHhKTTojDqazlzIbvTbnraIdxyEsY');
+
+    Geocoder.from({
+      latitude: this.state.latitude,
+      longitude: this.state.longitude
+    })
+      .then(json => {
+        var addressComponent = json.results[0].formatted_address
+        Alert.alert(
+          'Localização',
+          addressComponent,
+          [
+            { text: 'Whats App', onPress: () => this.sendWhatsAppMessage(addressComponent) },
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            { text: 'OK' },
+          ]
+        )
+      })
+      .catch(error => console.warn(error));
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <MapView style={styles.map} region={{
-          latitude: this.state.latitude == null ? 37.78825 : this.state.latitude,
-          longitude: this.state.longitude == null ? -122.4324 : this.state.longitude,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
           latitudeDelta: this.state.latitudeDelta,
           longitudeDelta: this.state.longitudeDelta
         }}>
           <Marker
             coordinate={{
-              latitude: this.state.latitude == null ? 37.78825 : this.state.latitude,
-              longitude: this.state.longitude == null ? -122.4324 : this.state.longitude,
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
             }}
             title="teste"
             description="teste"
           />
         </MapView>
-        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => { console.log("hi") }}>
+        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.getAddress()}>
         </ActionButton>
       </View>
     )
