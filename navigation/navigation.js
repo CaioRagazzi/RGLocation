@@ -6,6 +6,8 @@ import { zoomIn, fromLeft, fadeIn } from 'react-navigation-transitions';
 import HomeScreen from "../screens/home";
 import LocationScreen from "../screens/location";
 import SplashScreen from "../screens/splash"
+import BackgroundScreen from "../screens/background"
+import CameradScreen from "../screens/camera"
 
 const handleCustomTransition = ({ scenes }) => {
   const prevScene = scenes[scenes.length - 2];
@@ -22,7 +24,9 @@ const handleCustomTransition = ({ scenes }) => {
 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
-  Location: LocationScreen
+  Location: LocationScreen,
+  Background: BackgroundScreen,
+  Camera: CameradScreen
 }, {
   transitionConfig: (nav) => handleCustomTransition(nav)
 });

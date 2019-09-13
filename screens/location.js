@@ -28,6 +28,9 @@ export default class LocationScreen extends Component {
   }
 
   componentWillUnmount() {
+    if (this.state.promisePosition == null) {
+      return
+    }
     this.state.promisePosition.remove()
   }
 
