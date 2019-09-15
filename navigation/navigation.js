@@ -1,7 +1,8 @@
+import React from "react";
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { createDrawerNavigator } from 'react-navigation-drawer';
-import { zoomIn, fromLeft, fadeIn } from 'react-navigation-transitions';
+import { Ionicons } from '@expo/vector-icons';
+import { createBottomTabNavigator } from "react-navigation-tabs";
 
 import HomeScreen from "../screens/home";
 import LocationScreen from "../screens/location";
@@ -9,35 +10,52 @@ import SplashScreen from "../screens/splash"
 import BackgroundScreen from "../screens/background"
 import CameradScreen from "../screens/camera"
 
-const handleCustomTransition = ({ scenes }) => {
-  const prevScene = scenes[scenes.length - 2];
-  const nextScene = scenes[scenes.length - 1];
+const LocationNavigator = createStackNavigator({
+  Location: LocationScreen
+})
 
-  // Custom transitions go there
-  if (prevScene
-    && prevScene.route.routeName === 'Home'
-    && nextScene.route.routeName === 'Location') {
-    return zoomIn();
-  }
-  return fromLeft();
-}
+const CameraNavigator = createStackNavigator({
+  Camera: CameradScreen
+})
+
+const HomeNavigator = createStackNavigator({
+  Home: HomeScreen,
+})
 
 const AppNavigator = createStackNavigator({
-  Home: HomeScreen,
-  Location: LocationScreen,
-  Background: BackgroundScreen,
-  Camera: CameradScreen
-}, {
-  transitionConfig: (nav) => handleCustomTransition(nav)
+  Background: BackgroundScreen
 });
 
-const DrawerNavigator = createDrawerNavigator({
-  App: AppNavigator
+const BottomNavigator = createBottomTabNavigator({
+  Location: {
+    screen: LocationNavigator,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return <Ionicons name="md-locate" size={25}/>
+      }
+    }
+  },
+  Home: {
+    screen: HomeNavigator,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return <Ionicons name="ios-home" size={25}/>
+      }
+    }
+  },
+  Camera: {
+    screen: CameraNavigator,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return <Ionicons name="ios-camera" size={25}/>
+      }
+    }
+  }
 })
 
 const SwitchNavigator = createSwitchNavigator({
   Splash: SplashScreen,
-  App: DrawerNavigator
+  App: BottomNavigator
 })
 
 export default createAppContainer(SwitchNavigator);

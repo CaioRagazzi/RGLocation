@@ -3,17 +3,22 @@ import { Platform, StyleSheet, View, Alert, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
+import { Ionicons } from '@expo/vector-icons';
 import Geocoder from 'react-native-geocoding';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
 export default class LocationScreen extends Component {
 
+  static navigationOptions = {
+    title: 'Location'
+  };
+
   state = {
     latitude: 37.78825,
     longitude: -122.4324,
-    latitudeDelta: 0.04,
-    longitudeDelta: 0.05,
+    latitudeDelta: 0.01,
+    longitudeDelta: 0.02,
     promisePosition: null
   };
 
@@ -44,7 +49,7 @@ export default class LocationScreen extends Component {
 
     let promisePosition = await Location.watchPositionAsync({
       accuracy: Location.Accuracy.BestForNavigation,
-      distanceInterval: 1
+      distanceInterval: 20
     }, (response) => {
       this.setState({
         latitude: response.coords.latitude,
@@ -102,7 +107,7 @@ export default class LocationScreen extends Component {
             description="teste"
           />
         </MapView>
-        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.getAddress()}>
+        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.getAddress()} renderIcon={(a) => <Ionicons name="md-locate" size={25} color="white"/> }> 
         </ActionButton>
       </View>
     )

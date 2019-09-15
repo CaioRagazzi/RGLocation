@@ -5,6 +5,10 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system';
 
 export default class CameraScreen extends Component {
+    static navigationOptions = {
+        title: 'Camera'
+      };
+
     state = {
         image: null
     }
@@ -18,16 +22,9 @@ export default class CameraScreen extends Component {
         const asset = await MediaLibrary.createAssetAsync(response.uri);
 
         MediaLibrary.createAlbumAsync('RG LOCATION', asset)
-        
-        console.log(response);
-        console.log(response.uri);
-        console.log(FileSystem.documentDirectory);
 
         let fileName = response.uri.split('/').pop()
-        let newPath = FileSystem.documentDirectory + fileName
-
-        console.log(newPath);
-        
+        let newPath = FileSystem.documentDirectory + fileName        
 
         FileSystem.moveAsync({
             from: response.uri,
