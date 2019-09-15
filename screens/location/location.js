@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Alert, Linking } from 'react-native';
+import { Platform, StyleSheet, View, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
 import { Ionicons } from '@expo/vector-icons';
-import Geocoder from 'react-native-geocoding';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+
 
 export default class LocationScreen extends Component {
 
@@ -64,29 +64,13 @@ export default class LocationScreen extends Component {
     Linking.openURL(`whatsapp://send?text=${message}`)
   }
 
-  getAddress = () => {
-    Geocoder.init('AIzaSyBzN5uHhKTTojDqazlzIbvTbnraIdxyEsY');
-
-    Geocoder.from({
-      latitude: this.state.latitude,
-      longitude: this.state.longitude
+  changeScreen() {
+    this.props.navigation.navigate('LocationDetails', {
+      location: {
+        latitude: this.state.latitude,
+        longitude: this.state.longitude,
+      }
     })
-      .then(json => {
-        var addressComponent = json.results[0].formatted_address
-        Alert.alert(
-          'Localização',
-          addressComponent,
-          [
-            { text: 'Whats App', onPress: () => this.sendWhatsAppMessage(addressComponent) },
-            {
-              text: 'Cancel',
-              style: 'cancel',
-            },
-            { text: 'OK' },
-          ]
-        )
-      })
-      .catch(error => console.warn(error));
   }
 
   render() {
@@ -107,7 +91,7 @@ export default class LocationScreen extends Component {
             description="teste"
           />
         </MapView>
-        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.getAddress()} renderIcon={(a) => <Ionicons name="md-locate" size={25} color="white"/> }> 
+        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.changeScreen()}>
         </ActionButton>
       </View>
     )
