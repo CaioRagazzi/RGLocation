@@ -91,7 +91,7 @@ export default class LocationScreen extends Component {
             description="teste"
           />
         </MapView>
-        <ActionButton buttonColor="rgba(231,76,60,1)" onPress={() => this.changeScreen()}>
+        <ActionButton buttonColor="grey" onPress={() => this.changeScreen()}>
         </ActionButton>
       </View>
     )

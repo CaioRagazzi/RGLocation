@@ -2,18 +2,22 @@ import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { fetchPlaces } from "../helpers/db";
 import MapView, { Marker } from 'react-native-maps';
+import { withNavigationFocus } from 'react-navigation';
 
 class VisitedLocationsScreen extends Component {
+
+    static navigationOptions = {
+        title: 'Visited Locations'
+      };
 
     state = {
         locations: []
     }
 
-    async componentDidMount() {
+    async componentWillReceiveProps() {
         fetchPlaces().then(response => {
             this.setState({ locations: response.rows._array })
-            console.log(response.rows._array); 
-            
+            console.log(response.rows._array);
         }).catch(err => {
             console.log(err);
         })
@@ -32,8 +36,8 @@ class VisitedLocationsScreen extends Component {
                                         latitude: item.lat,
                                         longitude: item.lng,
                                     }}
-                                    title="Local"
-                                    description={item.address}
+                                    title={item.address}
+                                    description={item.locationNotes}
                                 />
                             )
                         })
@@ -63,4 +67,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default VisitedLocationsScreen;
+export default withNavigationFocus(VisitedLocationsScreen);

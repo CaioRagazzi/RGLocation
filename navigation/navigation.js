@@ -7,7 +7,7 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import LocationScreen from "../screens/location/location";
 import LocationDetailsScreen from "../screens/location/locationDetails";
 import SplashScreen from "../screens/splash"
-import BackgroundScreen from "../screens/background"
+import RoadTripsScreen from "../screens/roadTrips"
 import VisitedLocationsScreen from "../screens/visitedLocations";
 
 const LocationNavigator = createStackNavigator({
@@ -19,8 +19,8 @@ const VisitedLocationsNavigator = createStackNavigator({
   VisitedLocations: VisitedLocationsScreen,
 })
 
-const AppNavigator = createStackNavigator({
-  Background: BackgroundScreen
+const RoadTripsNavigator = createStackNavigator({
+  RoadTrips: RoadTripsScreen
 });
 
 const BottomNavigator = createBottomTabNavigator({
@@ -28,7 +28,7 @@ const BottomNavigator = createBottomTabNavigator({
     screen: LocationNavigator,
     navigationOptions: {
       tabBarIcon: (tabInfo) => {
-        return <Ionicons name="md-locate" size={25}/>
+        return <Ionicons name="md-locate" size={25} />
       }
     }
   },
@@ -36,9 +36,18 @@ const BottomNavigator = createBottomTabNavigator({
     screen: VisitedLocationsNavigator,
     navigationOptions: {
       tabBarIcon: (tabInfo) => {
-        return <Ionicons name="ios-locate" size={25}/>
+        return <Ionicons name="ios-locate" size={25} />
       },
       title: "Visited Locations"
+    }
+  },
+  RoadTrips: {
+    screen: RoadTripsNavigator,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => {
+        return <Ionicons name="md-car" size={25} />
+      },
+      title: "Road Trips"
     }
   }
 })

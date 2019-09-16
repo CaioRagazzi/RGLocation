@@ -2,10 +2,10 @@ import { SQLite } from 'expo-sqlite';
 
 const db = SQLite.openDatabase('RGLocation')
 
-export const init = () => {
+export const drop = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY NOT NULL, title TEXT, imageUri TEXT, address TEXT, lat REAL, lng REAL)',
+            tx.executeSql('DROP TABLE IF EXISTS places',
                 [],
                 () => {
                     resolve()
@@ -18,11 +18,27 @@ export const init = () => {
     return promise
 }
 
-export const insertPlace = (title, imageUri, address, lat, lng) => {
+export const init = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO places (title, imageUri, address, lat, lng) VALUES (?,?,?,?,?)',
-                [title, imageUri, address, lat, lng],
+            tx.executeSql('CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY NOT NULL, address TEXT, locationNotes TEXT, hotelName TEXT, hotelPrice TEXT, hotelNotes TEXT, lat REAL, lng REAL)',
+                [],
+                () => {
+                    resolve()
+                },
+                (_, err) => {
+                    reject(err)
+                })
+        })
+    })
+    return promise
+}
+
+export const insertPlace = (address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('INSERT INTO places (address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng) VALUES (?,?,?,?,?,?,?)',
+                [address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng],
                 (_, result) => {
                     resolve(result)
                 },

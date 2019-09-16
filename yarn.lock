@@ -4472,6 +4472,11 @@ react-native-maps@~0.24.0:
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.24.2.tgz#19974f967cb0c2e24dab74ca879118e0932571b2"
   integrity sha512-1iNIDikp2dkCG+8DguaEviYZiMSYyvwqYT7pO2YTZvuFRDSc/P9jXMhTUnSh4wNDlEeQ47OJ09l0pwWVBZ7wxg==
 
+react-native-platform-touchable@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-platform-touchable/-/react-native-platform-touchable-1.1.1.tgz#fde4acc65eea585d28b164d0c3716a42129a68e4"
+  integrity sha1-/eSsxl7qWF0osWTQw3FqQhKaaOQ=
+
 react-native-reanimated@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-1.1.0.tgz#ba6864055ec3a206cdd5209a293fe653ce276206"
@@ -4585,6 +4590,13 @@ react-navigation-drawer@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/react-navigation-drawer/-/react-navigation-drawer-2.1.2.tgz#08016dccb76dc8531f85b399955c448a9bcedb62"
   integrity sha512-c/bcWBoyVsy71v4n6rddqmD4l/fyZy0FzhFbe9y7zN/ohxDFic0g1B1UxDSeYcYWJR743DnoIb+K1ZUsCueuSw==
+
+react-navigation-header-buttons@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-navigation-header-buttons/-/react-navigation-header-buttons-3.0.2.tgz#f9ca750a15b4aad0fcf7ad5013b78b2ca0c7d14c"
+  integrity sha512-dzcJnr5uH76Ym8NhIM39zBxrXPgyJ7MLRRt/D5cuubE5w6uYZ5Hsep/QD7AiFlIV1cJrY3iCU0PXyjx33ZhoGA==
+  dependencies:
+    react-native-platform-touchable "^1.1.1"
 
 react-navigation-stack@^1.5.4:
   version "1.5.4"
@@ -5557,7 +5569,7 @@ uuid-js@^0.7.5:
   resolved "https://registry.yarnpkg.com/uuid-js/-/uuid-js-0.7.5.tgz#6c886d02a53d2d40dcf25d91a170b4a7b25b94d0"
   integrity sha1-bIhtAqU9LUDc8l2RoXC0p7JblNA=
 
-uuid@^3.3.2:
+uuid@^3.3.2, uuid@^3.3.3:
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.3.3.tgz#4568f0216e78760ee1dbf3a4d2cf53e224112866"
   integrity sha512-pW0No1RGHgzlpHJO1nsVrHKpOEIxkGg1xB+v0ZmdNH5OAeAwzAVrCnI2/6Mtx+Uys6iaylxa+D3g4j63IKKjSQ==
