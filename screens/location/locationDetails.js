@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, FlatList, Switch, ScrollView, KeyboardAvoidingView } from "react-native";
+import { View, StyleSheet, Image, Switch, ScrollView, KeyboardAvoidingView } from "react-native";
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@expo/vector-icons';
-import { Item as ItemNative, Input, Label, Content, Picker, Textarea, Container, Form, Icon } from 'native-base';
+import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } from 'native-base';
 import Geocoder from 'react-native-geocoding';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
-import uuid from 'uuid/v1';
 import { HeaderButtons, Item as ItemHeader } from "react-navigation-header-buttons";
 import { Header } from 'react-navigation-stack';
 import { CustomHeaderButton } from "./headerButton";
@@ -19,7 +18,7 @@ class LocationDetailsScreen extends Component {
         location: {},
         address: '',
         locationNotes: '',
-        images: [],
+        image: null,
         hasHotel: false,
         hotelName: '',
         hotelPrice: '',
@@ -48,7 +47,7 @@ class LocationDetailsScreen extends Component {
     }
 
     insert = () => {
-        insertPlace(this.state.address, this.state.locationNotes, this.state.hotelName, this.state.hotelPrice, this.state.hotelNotes, this.state.location.latitude, this.state.location.longitude).then(response => {
+        insertPlace(this.state.address, this.state.locationNotes, this.state.hotelName, this.state.hotelPrice, this.state.hotelNotes, this.state.image, this.state.location.latitude, this.state.location.longitude).then(response => {
             this.props.navigation.goBack()
         }).catch(err => {
             console.log(err);
@@ -72,7 +71,7 @@ class LocationDetailsScreen extends Component {
             to: uriFile
         })
 
-        this.setState({ images: [...this.state.images, { uri: uriFile, id: uuid() }] })
+        this.setState({ image: uriFile })
     }
 
     getAddress = () => {
@@ -173,17 +172,14 @@ class LocationDetailsScreen extends Component {
                                     onChangeText={this.handleLocationNotesChange}
                                     placeholder="Place Notes" />
 
-                                <FlatList
-                                    numColumns={3}
-                                    data={this.state.images}
-                                    keyExtractor={item => item.id}
-                                    renderItem={({ item }) => <Image style={{ width: 100, height: 100, margin: 5 }}
-                                        source={{ uri: item.uri }} />} />
+                                <Image style={{ width: 500, height: 300 }} source={{ uri: this.state.image }} resizeMode="contain" />
                             </Form>
                         </Content>
                     </ScrollView>
                 </KeyboardAvoidingView >
-                <ActionButton onPress={() => this.takePicture()} buttonColor="grey" renderIcon={(a) => <Ionicons name="ios-camera" size={25} color="white" />} />
+                {
+                    this.state.image == null ? (<ActionButton onPress={() => this.takePicture()} buttonColor="grey" renderIcon={(a) => <Ionicons name="ios-camera" size={25} color="white" />} />) : null
+                }
             </Container>
         );
     }

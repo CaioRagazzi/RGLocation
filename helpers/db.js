@@ -21,7 +21,7 @@ export const drop = () => {
 export const init = () => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY NOT NULL, address TEXT, locationNotes TEXT, hotelName TEXT, hotelPrice TEXT, hotelNotes TEXT, lat REAL, lng REAL)',
+            tx.executeSql('CREATE TABLE IF NOT EXISTS places (id INTEGER PRIMARY KEY NOT NULL, address TEXT, locationNotes TEXT, hotelName TEXT, hotelPrice TEXT, hotelNotes TEXT, img TEXT, lat REAL, lng REAL)',
                 [],
                 () => {
                     resolve()
@@ -34,11 +34,11 @@ export const init = () => {
     return promise
 }
 
-export const insertPlace = (address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng) => {
+export const insertPlace = (address, locationNotes, hotelName, hotelPrice, hotelNotes, img, lat, lng) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
-            tx.executeSql('INSERT INTO places (address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng) VALUES (?,?,?,?,?,?,?)',
-                [address, locationNotes, hotelName, hotelPrice, hotelNotes, lat, lng],
+            tx.executeSql('INSERT INTO places (address, locationNotes, hotelName, hotelPrice, hotelNotes, img, lat, lng) VALUES (?,?,?,?,?,?,?,?)',
+                [address, locationNotes, hotelName, hotelPrice, hotelNotes, img, lat, lng],
                 (_, result) => {
                     resolve(result)
                 },
