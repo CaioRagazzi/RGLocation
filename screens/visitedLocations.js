@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { fetchPlaces } from "../helpers/db";
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, Callout } from 'react-native-maps';
 import { withNavigationFocus } from 'react-navigation';
 
 class VisitedLocationsScreen extends Component {
 
     static navigationOptions = {
         title: 'Visited Locations'
-      };
+    };
 
     state = {
         locations: []
@@ -31,14 +31,16 @@ class VisitedLocationsScreen extends Component {
                         this.state.locations.map(item => {
                             return (
                                 <Marker
-                                key={item.id}
+                                    key={item.id}
                                     coordinate={{
                                         latitude: item.lat,
                                         longitude: item.lng,
                                     }}
                                     title={item.address}
-                                    description={item.locationNotes}
-                                />
+                                    pinColor={item.color}
+                                >
+                                    <Callout onPress={() => alert('alou')}></Callout>
+                                </Marker>
                             )
                         })
                     }

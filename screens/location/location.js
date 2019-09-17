@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View, Linking } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
-import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
@@ -87,8 +86,6 @@ export default class LocationScreen extends Component {
               latitude: this.state.latitude,
               longitude: this.state.longitude,
             }}
-            title="teste"
-            description="teste"
           />
         </MapView>
         <ActionButton buttonColor="grey" onPress={() => this.changeScreen()}>

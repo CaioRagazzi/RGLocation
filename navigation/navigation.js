@@ -7,7 +7,8 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import LocationScreen from "../screens/location/location";
 import LocationDetailsScreen from "../screens/location/locationDetails";
 import SplashScreen from "../screens/splash"
-import RoadTripsScreen from "../screens/roadTrips"
+import RoadTripsScreen from "../screens/roadTrip/roadTrips"
+import AddRoadTripsScreen from "../screens/roadTrip/addRoadTrips";
 import VisitedLocationsScreen from "../screens/visitedLocations";
 
 const LocationNavigator = createStackNavigator({
@@ -20,7 +21,8 @@ const VisitedLocationsNavigator = createStackNavigator({
 })
 
 const RoadTripsNavigator = createStackNavigator({
-  RoadTrips: RoadTripsScreen
+  RoadTrips: RoadTripsScreen,
+  AddRoadTrip: AddRoadTripsScreen
 });
 
 const BottomNavigator = createBottomTabNavigator({

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Image, Switch, ScrollView, KeyboardAvoidingView } from "react-native";
+import { View, Picker, StyleSheet, Image, Switch, ScrollView, KeyboardAvoidingView } from "react-native";
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@expo/vector-icons';
 import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } from 'native-base';
@@ -9,7 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import { HeaderButtons, Item as ItemHeader } from "react-navigation-header-buttons";
 import { Header } from 'react-navigation-stack';
 import { CustomHeaderButton } from "./headerButton";
-import { insertPlace } from "../../helpers/db";
+import { insertPlace, fetchRoadTrips } from "../../helpers/db";
 
 
 class LocationDetailsScreen extends Component {
@@ -24,6 +24,8 @@ class LocationDetailsScreen extends Component {
         hotelPrice: '',
         hotelNotes: '',
         hasRoadTrip: false,
+        roadTripSelected: '',
+        allRoadTrips: [],
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -41,17 +43,32 @@ class LocationDetailsScreen extends Component {
         let currentLocation = this.props.navigation.getParam('location', 'NO-LOCATION')
         this.props.navigation.setParams({ save: this.insert })
 
+        fetchRoadTrips().then(response => {
+            this.setState({ allRoadTrips: response.rows._array })
+            console.log(response.rows._array);
+            
+        }).catch(err => console.log(err))
+        
+
         this.setState({ location: currentLocation }, () => {
             this.getAddress()
         })
     }
 
     insert = () => {
-        insertPlace(this.state.address, this.state.locationNotes, this.state.hotelName, this.state.hotelPrice, this.state.hotelNotes, this.state.image, this.state.location.latitude, this.state.location.longitude).then(response => {
-            this.props.navigation.goBack()
-        }).catch(err => {
-            console.log(err);
-        })
+        insertPlace(this.state.address,
+            this.state.locationNotes,
+            this.state.hotelName,
+            this.state.hotelPrice,
+            this.state.hotelNotes,
+            this.state.image,
+            this.state.hasRoadTrip == false ? 0 : this.state.roadTripSelected == '' ? this.state.allRoadTrips[0].id : this.state.roadTripSelected,
+            this.state.location.latitude,
+            this.state.location.longitude).then(response => {
+                this.props.navigation.goBack()
+            }).catch(err => {
+                console.log(err);
+            })
     }
 
     takePicture = async () => {
@@ -96,6 +113,9 @@ class LocationDetailsScreen extends Component {
     }
 
     handleRoadTripChange = (val) => {
+        if (val == false) {
+            this.setState({ roadTripSelected: '' })
+        }
         this.setState({ hasRoadTrip: val })
     }
 
@@ -122,24 +142,41 @@ class LocationDetailsScreen extends Component {
                     <ScrollView>
                         <Content padder>
                             <Form>
-                                <ItemNative fixedLabel regular>
+                                <ItemNative fixedLabel regular style={{ paddingLeft: 10 }}>
                                     <Label>Location:</Label>
                                     <Input disabled value={this.state.address} />
                                 </ItemNative>
 
-                                <ItemNative fixedLabel regular style={{ marginTop: 10 }}>
+                                <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                     <Label>Hotel:</Label>
                                     <Switch onValueChange={this.handleHotelChange} value={this.state.hasHotel} />
                                 </ItemNative>
 
-                                <ItemNative fixedLabel regular style={{ marginTop: 10 }}>
+                                <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                     <Label>Road Trip:</Label>
                                     <Switch onValueChange={this.handleRoadTripChange} value={this.state.hasRoadTrip} />
                                 </ItemNative>
 
                                 {
+                                    this.state.hasRoadTrip ?
+                                        <View style={{ borderStyle: "solid", borderWidth: 0.3, marginTop: 10 }}>
+                                            <Picker
+                                                selectedValue={this.state.roadTripSelected}
+                                                style={{ height: 50, width: "100%" }}
+                                                onValueChange={(itemValue, itemIndex) => {
+                                                    this.setState({ roadTripSelected: itemValue })
+                                                }
+                                                }>
+                                                {this.state.allRoadTrips.map(item => {
+                                                    return <Picker.Item key={item.id} label={item.name.toUpperCase()} value={item.id} />
+                                                })}
+                                            </Picker>
+                                        </View> : null
+                                }
+
+                                {
                                     this.state.hasHotel ?
-                                        <ItemNative fixedLabel regular style={{ marginTop: 10 }}>
+                                        <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                             <Label>Hotel name:</Label>
                                             <Input onChangeText={this.handleHotelNameChange} value={this.state.hotelName} />
                                         </ItemNative> : null
@@ -147,7 +184,7 @@ class LocationDetailsScreen extends Component {
 
                                 {
                                     this.state.hasHotel ?
-                                        <ItemNative fixedLabel regular style={{ marginTop: 10 }}>
+                                        <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                             <Label>Hotel price:</Label>
                                             <Input onChangeText={this.handleHotelPriceChange} value={this.state.hotelPrice} />
                                         </ItemNative> : null
@@ -156,7 +193,7 @@ class LocationDetailsScreen extends Component {
                                 {
                                     this.state.hasHotel ?
                                         <Textarea
-                                            style={{ marginTop: 10, width: undefined }}
+                                            style={{ marginTop: 10, width: undefined, paddingTop: 10 }}
                                             value={this.state.hotelNotes}
                                             onChangeText={this.handleHotelNotesChange}
                                             bordered
@@ -165,14 +202,14 @@ class LocationDetailsScreen extends Component {
                                 }
 
                                 <Textarea
-                                    style={{ marginTop: 10, width: undefined }}
+                                    style={{ marginTop: 10, width: undefined, paddingTop: 10 }}
                                     bordered
                                     rowSpan={5}
                                     value={this.state.locationNotes}
                                     onChangeText={this.handleLocationNotesChange}
                                     placeholder="Place Notes" />
 
-                                <Image style={{ width: 500, height: 300 }} source={{ uri: this.state.image }} resizeMode="contain" />
+                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.image }} />
                             </Form>
                         </Content>
                     </ScrollView>
