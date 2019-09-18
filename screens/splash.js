@@ -7,13 +7,13 @@ export default class SplashScreen extends Component {
 
     componentDidMount() {
 
-        drop().then(() => {
-            console.log('Database dropped');
-            this.props.navigation.navigate('Location')
-        }).catch((err) => {
-            console.log('Error initialization database');
-            alert(err)
-        })
+        // drop().then(() => {
+        //     console.log('Database dropped');
+        //     this.props.navigation.navigate('Location')
+        // }).catch((err) => {
+        //     console.log('Error initialization database');
+        //     alert(err)
+        // })
 
         init().then(() => {
             console.log('Database initialized');

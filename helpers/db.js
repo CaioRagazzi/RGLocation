@@ -119,3 +119,19 @@ export const fetchRoadTrips = () => {
     })
     return promise
 }
+
+export const deleteRoadTrips = (id) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('DELETE FROM roadTrips WHERE id = ?;',
+                [id],
+                (_, result) => {
+                    resolve(result)
+                },
+                (_, err) => {
+                    reject(err)
+                })
+        })
+    })
+    return promise
+}
