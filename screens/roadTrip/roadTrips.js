@@ -17,7 +17,7 @@ class RoadTripsScreen extends Component {
         fetchRoadTrips().then(response => {
             this.setState({ roadTrips: response.rows._array })
             console.log(response.rows._array);
-            
+
         }).catch(err => console.log(err))
     }
 
@@ -55,7 +55,11 @@ class RoadTripsScreen extends Component {
                                         </View>
                                     </TouchableNativeFeedback>
                                 ]}>
-                                    <ListItem><Text style={{ color: item.color }}>{item.name.toUpperCase()}</Text></ListItem>
+                                    <TouchableNativeFeedback onPress={() => alert('teste')}>
+                                        <ListItem style={{ height: 60 }}>
+                                            <Text style={{ color: item.color, fontWeight: 'bold', fontSize: 20 }}>{item.name.toUpperCase()}</Text>
+                                        </ListItem>
+                                    </TouchableNativeFeedback>
                                 </Swipeable>}
                             keyExtractor={item => item.id.toString()}
                         />
