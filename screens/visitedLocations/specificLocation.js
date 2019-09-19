@@ -123,7 +123,7 @@ export default class SpecificLocationScreen extends Component {
                                     onChangeText={this.handleLocationNotesChange}
                                     placeholder="Place Notes" />
 
-                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.img }} />
+                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.img }} /> 
                             </Form>
                         </Content>
                     </ScrollView>
