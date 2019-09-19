@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
-import { View, KeyboardAvoidingView, ScrollView, Switch, Image, Picker } from 'react-native'
+import { Text, KeyboardAvoidingView, ScrollView, Switch, Image, TouchableHighlight } from 'react-native'
 import { Header } from 'react-navigation-stack';
 import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } from 'native-base';
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@expo/vector-icons';
+import { Overlay } from 'react-native-elements';
 
 export default class SpecificLocationScreen extends Component {
 
@@ -25,6 +26,7 @@ export default class SpecificLocationScreen extends Component {
     };
 
     state = {
+        isVisible: false
     }
 
     handleHotelChange = (val) => {
@@ -68,31 +70,14 @@ export default class SpecificLocationScreen extends Component {
 
                                 <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                     <Label>Hotel:</Label>
-                                    <Switch onValueChange={this.handleHotelChange} value={this.state.hasHotel == 1 ? true : false} />
+                                    <Switch disabled onValueChange={this.handleHotelChange} value={this.state.hasHotel == 1 ? true : false} />
                                 </ItemNative>
-
-                                {
-                                    this.state.hasRoadTrip ?
-                                        <View style={{ borderStyle: "solid", borderWidth: 0.3, marginTop: 10 }}>
-                                            <Picker
-                                                selectedValue={this.state.roadTripSelected}
-                                                style={{ height: 50, width: "100%" }}
-                                                onValueChange={(itemValue, itemIndex) => {
-                                                    this.setState({ roadTripSelected: itemValue })
-                                                }
-                                                }>
-                                                {this.state.allRoadTrips.map(item => {
-                                                    return <Picker.Item key={item.id} label={item.name.toUpperCase()} value={item.id} />
-                                                })}
-                                            </Picker>
-                                        </View> : null
-                                }
 
                                 {
                                     this.state.hasHotel ?
                                         <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                             <Label>Hotel name:</Label>
-                                            <Input onChangeText={this.handleHotelNameChange} value={this.state.hotelName} />
+                                            <Input disabled onChangeText={this.handleHotelNameChange} value={this.state.hotelName} />
                                         </ItemNative> : null
                                 }
 
@@ -100,13 +85,14 @@ export default class SpecificLocationScreen extends Component {
                                     this.state.hasHotel ?
                                         <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                             <Label>Hotel price:</Label>
-                                            <Input onChangeText={this.handleHotelPriceChange} value={this.state.hotelPrice} />
+                                            <Input disabled onChangeText={this.handleHotelPriceChange} value={this.state.hotelPrice} />
                                         </ItemNative> : null
                                 }
 
                                 {
                                     this.state.hasHotel ?
                                         <Textarea
+                                            disabled
                                             style={{ marginTop: 10, width: undefined, paddingTop: 10 }}
                                             value={this.state.hotelNotes}
                                             onChangeText={this.handleHotelNotesChange}
@@ -116,6 +102,7 @@ export default class SpecificLocationScreen extends Component {
                                 }
 
                                 <Textarea
+                                    disabled
                                     style={{ marginTop: 10, width: undefined, paddingTop: 10 }}
                                     bordered
                                     rowSpan={5}
@@ -123,11 +110,16 @@ export default class SpecificLocationScreen extends Component {
                                     onChangeText={this.handleLocationNotesChange}
                                     placeholder="Place Notes" />
 
-                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.img }} /> 
+                                <TouchableHighlight onPress={() => this.setState({ isVisible: true })}>
+                                    <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.img }} />
+                                </TouchableHighlight>
                             </Form>
                         </Content>
                     </ScrollView>
                 </KeyboardAvoidingView >
+                <Overlay isVisible={this.state.isVisible} onBackdropPress={() => this.setState({ isVisible: false })}>
+                    <Image style={{ width: '100%', height: '100%' }} resizeMode="contain" source={{ uri: this.state.img }} />
+                </Overlay>
                 {
                     this.state.img == null ? (<ActionButton onPress={() => this.takePicture()} buttonColor="grey" renderIcon={(a) => <Ionicons name="ios-camera" size={25} color="white" />} />) : null
                 }

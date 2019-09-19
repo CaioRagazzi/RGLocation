@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
 import { fetchPlaces } from "../../helpers/db";
-import MapView, { Marker, Polyline } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { withNavigationFocus } from 'react-navigation';
+import MapViewDirections from 'react-native-maps-directions';
 
 class VisitedLocationsScreen extends Component {
 
@@ -24,9 +25,20 @@ class VisitedLocationsScreen extends Component {
     }
 
     render() {
+        const origin = { latitude: 37.3318456, longitude: -122.0296002 };
+        const destination = { latitude: 37.771707, longitude: -122.4053769 };
+        const GOOGLE_MAPS_APIKEY = 'AIzaSyBzN5uHhKTTojDqazlzIbvTbnraIdxyEsY';
+
         return (
             <View style={styles.container}>
                 <MapView style={styles.map}>
+                    <MapViewDirections
+                        origin={origin}
+                        destination={destination}
+                        apikey={GOOGLE_MAPS_APIKEY}
+                        strokeColor="hotpink"
+                        strokeWidth={2}
+                    />
                     {
                         this.state.locations.map(item => {
                             return (
