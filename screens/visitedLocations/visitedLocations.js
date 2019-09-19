@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, StyleSheet } from "react-native";
-import { fetchPlaces } from "../helpers/db";
-import MapView, { Marker, Callout } from 'react-native-maps';
+import { fetchPlaces } from "../../helpers/db";
+import MapView, { Marker, Polyline } from 'react-native-maps';
 import { withNavigationFocus } from 'react-navigation';
 
 class VisitedLocationsScreen extends Component {
@@ -17,7 +17,7 @@ class VisitedLocationsScreen extends Component {
     async componentWillReceiveProps() {
         this.setState({ locations: [] })
         fetchPlaces().then(response => {
-            this.setState({ locations: response.rows._array })            
+            this.setState({ locations: response.rows._array })
         }).catch(err => {
             console.log(err);
         })
@@ -28,7 +28,7 @@ class VisitedLocationsScreen extends Component {
             <View style={styles.container}>
                 <MapView style={styles.map}>
                     {
-                        this.state.locations.map(item => {                            
+                        this.state.locations.map(item => {
                             return (
                                 <Marker
                                     key={item.id}
@@ -36,10 +36,12 @@ class VisitedLocationsScreen extends Component {
                                         latitude: item.lat,
                                         longitude: item.lng,
                                     }}
-                                    title={item.address}
+                                    title=''
                                     pinColor={item.color}
+                                    onPress={() => {
+                                        this.props.navigation.navigate('SpecificLocation', { location: item })
+                                    }}
                                 >
-                                    <Callout onPress={() => alert('alou')}></Callout>
                                 </Marker>
                             )
                         })

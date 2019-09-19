@@ -1,110 +1,30 @@
-import React, { Component } from 'react';
-import { View, Picker, StyleSheet, Image, Switch, ScrollView, KeyboardAvoidingView } from "react-native";
+import React, { Component } from 'react'
+import { View, KeyboardAvoidingView, ScrollView, Switch, Image, Picker } from 'react-native'
+import { Header } from 'react-navigation-stack';
+import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } from 'native-base';
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@expo/vector-icons';
-import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } from 'native-base';
-import Geocoder from 'react-native-geocoding';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import { HeaderButtons, Item as ItemHeader } from "react-navigation-header-buttons";
-import { Header } from 'react-navigation-stack';
-import { CustomHeaderButton } from "./headerButton";
-import { insertPlace, fetchRoadTrips } from "../../helpers/db";
 
+export default class SpecificLocationScreen extends Component {
 
-class LocationDetailsScreen extends Component {
+    componentWillMount() {
+        const location = this.props.navigation.getParam('location')
+        this.setState({ ...location })
 
-    state = {
-        location: {},
-        address: '',
-        locationNotes: '',
-        image: null,
-        hasHotel: false,
-        hotelName: '',
-        hotelPrice: '',
-        hotelNotes: '',
-        hasRoadTrip: false,
-        roadTripSelected: '',
-        allRoadTrips: [],
+        this.props.navigation.setParams({
+            location: location
+        });
     }
 
     static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+
         return {
-            headerTitle: 'Location Details',
-            headerRight: (
-                <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
-                    <ItemHeader title="Save" iconName="ios-save" onPress={navigation.getParam('save')} />
-                </HeaderButtons>
-            ),
+            title: params.location.address
         }
-    }
+    };
 
-    componentWillMount() {
-        let currentLocation = this.props.navigation.getParam('location', 'NO-LOCATION')
-        this.props.navigation.setParams({ save: this.insert })
-
-        fetchRoadTrips().then(response => {
-            this.setState({ allRoadTrips: response.rows._array })            
-        }).catch(err => console.log(err))
-        
-
-        this.setState({ location: currentLocation }, () => {
-            this.getAddress()
-        })
-    }
-
-    insert = () => {
-        insertPlace(this.state.address,
-            this.state.locationNotes,
-            this.state.hasHotel ? 1 : 0,
-            this.state.hotelName,
-            this.state.hotelPrice,
-            this.state.hotelNotes,
-            this.state.image,
-            this.state.hasRoadTrip == false ? 0 : this.state.roadTripSelected == '' ? this.state.allRoadTrips[0].id : this.state.roadTripSelected,
-            this.state.location.latitude,
-            this.state.location.longitude).then(response => {
-                this.props.navigation.goBack()
-            }).catch(err => {
-                console.log(err);
-            })
-    }
-
-    takePicture = async () => {
-        let response = await ImagePicker.launchCameraAsync({
-            mediaTypes: 'All',
-            quality: 1
-        })
-
-        if (response.cancelled) {
-            return
-        }
-
-        let uriFile = FileSystem.documentDirectory + response.uri.split('/').pop()
-
-        FileSystem.moveAsync({
-            from: response.uri,
-            to: uriFile
-        })
-
-        this.setState({ image: uriFile })
-    }
-
-    getAddress = () => {
-        Geocoder.init('AIzaSyBzN5uHhKTTojDqazlzIbvTbnraIdxyEsY');
-
-        Geocoder.from({
-            latitude: this.state.location.latitude,
-            longitude: this.state.location.longitude
-        })
-            .then(json => {
-                let street = json.results[0].address_components[1].short_name
-                let city = json.results[0].address_components[3].short_name
-                let country = json.results[0].address_components[5].short_name
-
-                this.setState({ address: `${street} - ${city} - ${country}` })
-            })
-            .catch(error => console.warn(error));
+    state = {
     }
 
     handleHotelChange = (val) => {
@@ -148,12 +68,7 @@ class LocationDetailsScreen extends Component {
 
                                 <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
                                     <Label>Hotel:</Label>
-                                    <Switch onValueChange={this.handleHotelChange} value={this.state.hasHotel} />
-                                </ItemNative>
-
-                                <ItemNative fixedLabel regular style={{ marginTop: 10, paddingLeft: 10 }}>
-                                    <Label>Road Trip:</Label>
-                                    <Switch onValueChange={this.handleRoadTripChange} value={this.state.hasRoadTrip} />
+                                    <Switch onValueChange={this.handleHotelChange} value={this.state.hasHotel == 1 ? true : false} />
                                 </ItemNative>
 
                                 {
@@ -208,20 +123,15 @@ class LocationDetailsScreen extends Component {
                                     onChangeText={this.handleLocationNotesChange}
                                     placeholder="Place Notes" />
 
-                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.image }} />
+                                <Image style={{ width: '100%', height: 300, marginTop: 10 }} source={{ uri: this.state.img }} />
                             </Form>
                         </Content>
                     </ScrollView>
                 </KeyboardAvoidingView >
                 {
-                    this.state.image == null ? (<ActionButton onPress={() => this.takePicture()} buttonColor="grey" renderIcon={(a) => <Ionicons name="ios-camera" size={25} color="white" />} />) : null
+                    this.state.img == null ? (<ActionButton onPress={() => this.takePicture()} buttonColor="grey" renderIcon={(a) => <Ionicons name="ios-camera" size={25} color="white" />} />) : null
                 }
             </Container>
         );
     }
 }
-
-const styles = StyleSheet.create({
-});
-
-export default LocationDetailsScreen;

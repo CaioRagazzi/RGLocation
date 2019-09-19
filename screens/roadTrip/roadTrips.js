@@ -17,7 +17,7 @@ class RoadTripsScreen extends Component {
 
     componentWillReceiveProps() {
         fetchRoadTrips().then(response => {
-            this.setState({ roadTrips: response.rows._array })
+            this.setState({ roadTrips: response.rows._array })            
         }).catch(err => console.log(err))
     }
 
