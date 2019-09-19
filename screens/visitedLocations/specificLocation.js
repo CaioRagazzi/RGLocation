@@ -5,10 +5,14 @@ import { Item as ItemNative, Input, Label, Content, Textarea, Container, Form } 
 import ActionButton from 'react-native-action-button';
 import { Ionicons } from '@expo/vector-icons';
 import { Overlay } from 'react-native-elements';
+import { HeaderButtons, Item as ItemHeader } from "react-navigation-header-buttons";
+import { CustomHeaderButton } from "./headerButton";
+import { deleteSpecificLocation } from "../../helpers/db";
 
 export default class SpecificLocationScreen extends Component {
 
     componentWillMount() {
+        this.props.navigation.setParams({ delete: this.delete })
         const location = this.props.navigation.getParam('location')
         this.setState({ ...location })
 
@@ -21,12 +25,23 @@ export default class SpecificLocationScreen extends Component {
         const { params = {} } = navigation.state;
 
         return {
-            title: params.location.address
+            title: params.location.address,
+            headerRight: (
+                <HeaderButtons HeaderButtonComponent={CustomHeaderButton}>
+                    <ItemHeader title="Delete" iconName="trash" onPress={navigation.getParam('delete')} />
+                </HeaderButtons>
+            ),
         }
     };
 
     state = {
         isVisible: false
+    }
+
+    delete = () => {        
+        deleteSpecificLocation(this.state.id).then(response => {
+            this.props.navigation.goBack()
+        }).catch(err => console.log(err))
     }
 
     handleHotelChange = (val) => {

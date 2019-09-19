@@ -72,6 +72,22 @@ export const insertPlace = (address, locationNotes, hasHotel, hotelName, hotelPr
     return promise
 }
 
+export const deleteSpecificLocation = (id) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('DELETE FROM places WHERE id = ?',
+                [id],
+                (_, result) => {
+                    resolve(result)
+                },
+                (_, err) => {
+                    reject(err)
+                })
+        })
+    })
+    return promise
+}
+
 export const insertRoadTrip = (name, color) => {
     const promise = new Promise((resolve, reject) => {
         db.transaction((tx) => {
