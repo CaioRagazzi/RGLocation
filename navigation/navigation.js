@@ -9,6 +9,7 @@ import LocationDetailsScreen from "../screens/location/locationDetails";
 import SplashScreen from "../screens/splash"
 import RoadTripsScreen from "../screens/roadTrip/roadTrips"
 import AddRoadTripsScreen from "../screens/roadTrip/addRoadTrips";
+import EditRoadTripsScreen from "../screens/roadTrip/editRoadTrip";
 import VisitedLocationsScreen from "../screens/visitedLocations";
 
 const LocationNavigator = createStackNavigator({
@@ -22,7 +23,8 @@ const VisitedLocationsNavigator = createStackNavigator({
 
 const RoadTripsNavigator = createStackNavigator({
   RoadTrips: RoadTripsScreen,
-  AddRoadTrip: AddRoadTripsScreen
+  AddRoadTrip: AddRoadTripsScreen,
+  EditRoadTrip: EditRoadTripsScreen
 });
 
 const BottomNavigator = createBottomTabNavigator({

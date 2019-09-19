@@ -15,16 +15,16 @@ export const drop = () => {
                 })
         })
 
-        db.transaction((tx) => {
-            tx.executeSql('DROP TABLE IF EXISTS roadTrips',
-                [],
-                () => {
-                    resolve()
-                },
-                (_, err) => {
-                    reject(err)
-                })
-        })
+        // db.transaction((tx) => {
+        //     tx.executeSql('DROP TABLE IF EXISTS roadTrips',
+        //         [],
+        //         () => {
+        //             resolve()
+        //         },
+        //         (_, err) => {
+        //             reject(err)
+        //         })
+        // })
     })
     return promise
 }
@@ -125,6 +125,22 @@ export const deleteRoadTrips = (id) => {
         db.transaction((tx) => {
             tx.executeSql('DELETE FROM roadTrips WHERE id = ?',
                 [id],
+                (_, result) => {
+                    resolve(result)
+                },
+                (_, err) => {
+                    reject(err)
+                })
+        })
+    })
+    return promise
+}
+
+export const updateRoadTrips = (name, color, id) => {
+    const promise = new Promise((resolve, reject) => {
+        db.transaction((tx) => {
+            tx.executeSql('UPDATE roadTrips SET name = ?, color = ? WHERE id = ?',
+                [name, color, id],
                 (_, result) => {
                     resolve(result)
                 },

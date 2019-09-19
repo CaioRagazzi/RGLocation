@@ -44,9 +44,7 @@ class LocationDetailsScreen extends Component {
         this.props.navigation.setParams({ save: this.insert })
 
         fetchRoadTrips().then(response => {
-            this.setState({ allRoadTrips: response.rows._array })
-            console.log(response.rows._array);
-            
+            this.setState({ allRoadTrips: response.rows._array })            
         }).catch(err => console.log(err))
         
 

@@ -3,8 +3,10 @@ import { Text, FlatList, TouchableNativeFeedback, View } from "react-native";
 import ActionButton from 'react-native-action-button';
 import { fetchRoadTrips, deleteRoadTrips } from "../../helpers/db";
 import { withNavigationFocus } from 'react-navigation';
-import { List, ListItem, Content, Container, Icon } from 'native-base';
+import { List, Content, Container, Icon } from 'native-base';
+import { ListItem } from 'react-native-elements'
 import Swipeable from 'react-native-swipeable';
+import { Avatar } from 'react-native-elements';
 
 
 class RoadTripsScreen extends Component {
@@ -16,8 +18,6 @@ class RoadTripsScreen extends Component {
     componentWillReceiveProps() {
         fetchRoadTrips().then(response => {
             this.setState({ roadTrips: response.rows._array })
-            console.log(response.rows._array);
-
         }).catch(err => console.log(err))
     }
 
@@ -36,12 +36,20 @@ class RoadTripsScreen extends Component {
             })
         })
         deleteRoadTrips(id).then(response => {
-            console.log(response);
         })
     }
 
     render() {
         return (
+            // <View>
+            //     {
+            //         this.state.roadTrips.map(item => {
+
+            //         })
+            //     }
+            //      <ActionButton buttonColor="grey" onPress={() => this.changeScreen()}>
+            //      </ActionButton>
+            // </View>
             <Container style={{ flex: 1 }}>
                 <Content>
                     <List>
@@ -55,12 +63,16 @@ class RoadTripsScreen extends Component {
                                         </View>
                                     </TouchableNativeFeedback>
                                 ]}>
-                                    <TouchableNativeFeedback onPress={() => alert('teste')}>
-                                        <ListItem style={{ height: 60 }}>
-                                            <Text style={{ color: item.color, fontWeight: 'bold', fontSize: 20 }}>{item.name.toUpperCase()}</Text>
-                                        </ListItem>
-                                    </TouchableNativeFeedback>
-                                </Swipeable>}
+                                    <ListItem
+                                        key={item.id.toString()}
+                                        title={item.name.toUpperCase()}
+                                        bottomDivider
+                                        leftAvatar={<Avatar rounded overlayContainerStyle={{ backgroundColor: item.color }} />}
+                                        chevron
+                                        onPress={() => {this.props.navigation.navigate('EditRoadTrip', { roadTrip: item })}}
+                                    />
+                                </Swipeable>
+                            }
                             keyExtractor={item => item.id.toString()}
                         />
                     </List>

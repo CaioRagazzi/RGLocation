@@ -15,9 +15,9 @@ class VisitedLocationsScreen extends Component {
     }
 
     async componentWillReceiveProps() {
+        this.setState({ locations: [] })
         fetchPlaces().then(response => {
-            this.setState({ locations: response.rows._array })
-            console.log(response.rows._array);
+            this.setState({ locations: response.rows._array })            
         }).catch(err => {
             console.log(err);
         })
@@ -28,7 +28,7 @@ class VisitedLocationsScreen extends Component {
             <View style={styles.container}>
                 <MapView style={styles.map}>
                     {
-                        this.state.locations.map(item => {
+                        this.state.locations.map(item => {                            
                             return (
                                 <Marker
                                     key={item.id}
