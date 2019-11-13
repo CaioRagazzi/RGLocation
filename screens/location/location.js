@@ -1,45 +1,46 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, View, Linking } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  View,
+  Linking,
+  Alert,
+} from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 
-
 export default class LocationScreen extends Component {
-
-  static navigationOptions = {
-    title: 'Location'
-  };
-
-  state = {
-    latitude: 37.78825,
-    longitude: -122.4324,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.02,
-    promisePosition: null
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      latitude: 37.78825,
+      longitude: -122.4324,
+      latitudeDelta: 0.01,
+      longitudeDelta: 0.02,
+      promisePosition: null,
+    };
+  }
 
   componentWillMount() {
     if (Platform.OS === 'android' && !Constants.isDevice) {
-      this.setState({
-        errorMessage: 'Oops, this will not work on Sketch in an Android emulator. Try it on your device!',
-      });
+      Alert.alert('Oops, this will not work on Sketch in an Android emulator. Try it on your device!');
     } else {
-      this._getLocationAsync();
+      this.getLocationAsync();
     }
   }
 
   componentWillUnmount() {
     if (this.state.promisePosition == null) {
-      return
+      return;
     }
-    this.state.promisePosition.remove()
+    this.state.promisePosition.remove();
   }
 
-  _getLocationAsync = async () => {
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+  getLocationAsync = async () => {
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
       this.setState({
         errorMessage: 'Permission to access location was denied',
@@ -62,6 +63,10 @@ export default class LocationScreen extends Component {
   sendWhatsAppMessage = (message) => {
     Linking.openURL(`whatsapp://send?text=${message}`)
   }
+
+  static navigationOptions = {
+    title: 'Location'
+  };
 
   changeScreen() {
     this.props.navigation.navigate('LocationDetails', {
