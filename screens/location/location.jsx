@@ -11,6 +11,7 @@ import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
+import PropTypes from 'prop-types';
 
 export default class LocationScreen extends Component {
   constructor(props) {
@@ -33,70 +34,83 @@ export default class LocationScreen extends Component {
   }
 
   componentWillUnmount() {
-    if (this.state.promisePosition == null) {
+    const { promisePosition } = this.state;
+    if (promisePosition == null) {
       return;
     }
-    this.state.promisePosition.remove();
+    promisePosition.remove();
   }
 
   getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
-      this.setState({
-        errorMessage: 'Permission to access location was denied',
-      });
+      Alert.alert('Permission to access location was denied');
     }
 
-    let promisePosition = await Location.watchPositionAsync({
+    const promisePosition = await Location.watchPositionAsync({
       accuracy: Location.Accuracy.BestForNavigation,
-      distanceInterval: 20
+      distanceInterval: 20,
     }, (response) => {
       this.setState({
         latitude: response.coords.latitude,
-        longitude: response.coords.longitude
+        longitude: response.coords.longitude,
       });
     });
 
-    this.setState({ promisePosition })
+    this.setState({ promisePosition });
   };
 
   sendWhatsAppMessage = (message) => {
-    Linking.openURL(`whatsapp://send?text=${message}`)
+    Linking.openURL(`whatsapp://send?text=${message}`);
   }
 
   static navigationOptions = {
-    title: 'Location'
+    title: 'Location',
   };
 
   changeScreen() {
-    this.props.navigation.navigate('LocationDetails', {
+    const { navigation } = this.props;
+    const { latitude, longitude } = this.state;
+    navigation.navigate('LocationDetails', {
       location: {
-        latitude: this.state.latitude,
-        longitude: this.state.longitude,
-      }
-    })
+        latitude,
+        longitude,
+      },
+    });
   }
 
   render() {
+    const {
+      latitude,
+      longitude,
+      latitudeDelta,
+      longitudeDelta,
+    } = this.state;
+
     return (
       <View style={styles.container}>
-        <MapView style={styles.map} region={{
-          latitude: this.state.latitude,
-          longitude: this.state.longitude,
-          latitudeDelta: this.state.latitudeDelta,
-          longitudeDelta: this.state.longitudeDelta
-        }}>
+        <MapView
+          style={styles.map}
+          region={{
+            latitude,
+            longitude,
+            latitudeDelta,
+            longitudeDelta,
+          }}
+        >
           <Marker
             coordinate={{
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
+              latitude,
+              longitude,
             }}
           />
         </MapView>
-        <ActionButton buttonColor="grey" onPress={() => this.changeScreen()}>
-        </ActionButton>
+        <ActionButton
+          buttonColor="grey"
+          onPress={() => this.changeScreen()}
+        />
       </View>
-    )
+    );
   }
 }
 
@@ -118,3 +132,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 });
+
+LocationScreen.propTypes = {
+  navigation: PropTypes.isRequired,
+};
