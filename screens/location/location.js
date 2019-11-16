@@ -11,7 +11,6 @@ import ActionButton from 'react-native-action-button';
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
-import PropTypes from 'prop-types';
 
 export default class LocationScreen extends Component {
   constructor(props) {
@@ -132,7 +131,3 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
 });
-
-LocationScreen.propTypes = {
-  navigation: PropTypes.isRequired,
-};

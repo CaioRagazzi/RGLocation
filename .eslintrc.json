@@ -24,6 +24,9 @@
     ],
     "rules": {
         "linebreak-style": ["error", "windows"],
-        "react/jsx-props-no-spreading": 0
+        "react/jsx-props-no-spreading": 0,
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/prop-types": 0,
+        "no-use-before-define": ["error", { "variables": false }]
     }
 }
